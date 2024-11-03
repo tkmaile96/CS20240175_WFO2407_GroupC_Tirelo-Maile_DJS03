@@ -47,7 +47,7 @@ function createBookPreviewButton({ author, id, image, title }) {
 }
 
 /**
- * Populates a dropdown menu with options.
+ * initiate a dropdown menu with options.
  * @param {string} dropdownDataAttribute - The data attribute for the dropdown element.
  * @param {Object} options - The options to populate the dropdown with.
  * @param {string} defaultText - The default option text.
@@ -78,7 +78,7 @@ function setTheme() {
 }
 
 /**
- * Applies the selected theme to the document.
+ * Apply the selected theme
  * @param {string} theme - The selected theme ('day' or 'night').
  */
 function applyTheme(theme) {
@@ -90,7 +90,7 @@ function applyTheme(theme) {
 }
 
 /**
- * Updates the "Show more" button's state and text.
+ * Updates the show more button
  */
 function updateShowMoreButton() {
     const button = document.querySelector('[data-list-button]');
@@ -103,7 +103,7 @@ function updateShowMoreButton() {
 
 /**
  * Handles form submission for the search filters.
- * Filters books and updates the display based on selected criteria.
+ * Filters books based on search
  * @param {Event} event - The form submit event.
  */
 function handleSearchForBooks(event) {
@@ -136,7 +136,7 @@ function filterBook(book, filters) {
 }
 
 /**
- * Loads additional books on "Show more" button click.
+ * Loads additional books 
  */
 function loadMoreBooks() {
     const start = currentPage * BOOKS_PER_PAGE;
@@ -147,7 +147,7 @@ function loadMoreBooks() {
 }
 
 /**
- * Initializes event listeners for various UI elements.
+ * Initializes event listeners 
  */
 function initializeEventListeners() {
     document.querySelector('[data-search-form]').addEventListener('submit', handleSearchForBooks);
