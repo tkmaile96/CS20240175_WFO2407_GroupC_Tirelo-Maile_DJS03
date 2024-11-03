@@ -48,43 +48,28 @@ function createBookPreviewButton({ author,  id, image, title }) {
     return previewButton;
 }
 
+/**
+ * initiate a dropdown menu with availabe options
+ * @parameters {string} dropdownDataAtrribute - the data attribute
+ * @parameters  {object} options - the options to display in the dropdown
+ * @parameters {string}  defaultText - the default text to display
+ */
+function  initializeDropdown(dropdownDataAtrribute, options, defaultText) {
+    const  dropdown = document.createDocumentFragment();
+    const defaultOption = document.createElement('option');
+    defaultOption.value = 'any';
+    defaultOption.innerText = defaultText;
+    dropdown.appendChild(defaultOption);
 
-const starting = document.createDocumentFragment()
-
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
-
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    starting.appendChild(element)
+    Object.entries(options).forEach(([id, name]) => {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = name;
+        dropdown.appendChild(option);
+    });
+    document.querySelector(`[${dropdownDataAtrribute}]`).appendChild(dropdown);
 }
 
-document.querySelector('[data-list-items]').appendChild(starting)
-
-const genreHtml = document.createDocumentFragment()
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
-
-for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    genreHtml.appendChild(element)
-}
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
 
