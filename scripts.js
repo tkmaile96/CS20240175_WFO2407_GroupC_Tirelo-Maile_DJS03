@@ -99,23 +99,28 @@ function updateShowMoreButton() {
     showMoreButton.innerHTML= `
     <span>Show more</span>
         <span class="list__remaining"> (${Math.max(0, filteredBooks.length - currentPage * BOOKS_PER_PAGE)})</span>
-        `
+        `;
+}
+/**
+ * Handles form submission for the search filters.
+ * Filters books and updates the display based on selected criteria.
+ * @parameters {Event} event - The form submit event.
+ */
+function handleSearchForBook(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const filters = Object.fromEntries(formData);
 
+    filteredBooks = books.filter(book => filterBook(book, filters));
+    currentPage = 1;
 
+    document.querySelector('[data-list-items]').innerHTML = '';
+    displayBookPreviews(filteredBooks.slice(0, BOOKS_PER_PAGE));
+    updateShowMoreButton();
+    document.querySelector('[data-list-message]').classList.toggle('list__message_show', filteredBooks.length === 0);
+    document.querySelector('[data-search-overlay]').open = false;
 }
 
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
-})
-
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
-
-document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
-    document.querySelector('[data-search-title]').focus()
-})
 
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
