@@ -121,6 +121,21 @@ function handleSearchForBook(event) {
     document.querySelector('[data-search-overlay]').open = false;
 }
 
+/**
+ * filter books based on search
+ * @parameters {object} book - the book to filter
+ * @parameters  {object} filters - the search filters
+ * @parameters {boolean} - true is book matches  the filter, false otherwise
+ */
+function  filterBook(book, filters) {
+    const titleMatch = filters.title.trim() === '' ||  book.title.toLowerCase().includes(filters.title.trim().toLowerCase());
+    const authorMatch = filters.author.trim() === '' || book.author === filters.author;
+    const genreMatch = filters.genre === 'any'  || book.genre.includes(filters.genre);
+
+
+}
+
+
 
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
