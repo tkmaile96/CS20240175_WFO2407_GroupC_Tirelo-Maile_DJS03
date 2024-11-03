@@ -1,60 +1,59 @@
-// import important data
-import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
+import { books, authors, genres, BOOKS_PER_PAGE } from './data.js';
 
 let currentPage = 1;
-let filteredBooks = books
+let filteredBooks = books;
 
 /**
- * Initialize the book preview, genre and author
+ * Initializes the book previews, genre and author dropdowns, and theme settings.
  */
-function InitializeUserInterface() {
+function initializeUserInterface() {
     displayBookPreviews(filteredBooks.slice(0, BOOKS_PER_PAGE));
-    initializeDropdown('data-search-genres', genres, 'All Genres');
-    initializeDropdown('data-search-authors',  authors, 'All Authors');
+    initialiseDropdown('data-search-genres', genres, 'All Genres');
+    initialiseDropdown('data-search-authors', authors, 'All Authors');
     setTheme();
     updateShowMoreButton();
 }
 
 /**
- * Let us create  a function to display the book previews
- * @parameters {Array} booksToShow - List of all the books to display
-
+ * Creates book preview buttons and appends them to the DOM.
+ * @param {Array} booksToShow - List of books to display.
  */
 function displayBookPreviews(booksToShow) {
     const fragment = document.createDocumentFragment();
-    booksToShow.forEach(({ author, id , image , title }) => {
-        const previewButton = createBookPreviewButton({ author, id, image, title});
-        fragment.appendChild(previewButton);
-    })
-    document.querySelector('[data-list-items]').appendChild(fragment)
+    booksToShow.forEach(({ author, id, image, title }) => {
+        const button = createBookPreviewButton({ author, id, image, title });
+        fragment.appendChild(button);
+    });
+    document.querySelector('[data-list-items]').appendChild(fragment);
 }
 
 /**
- * let us create a button  for each book preview
- * @parameters  {Object} book - Object containing the book details
- * @return  {HTMLElement} - The button created for the book preview
+ * Creates a button element for a book preview.
+ * @param {Object} book - The book details.
+ * @returns {HTMLElement} - The preview button element.
  */
-function createBookPreviewButton({ author,  id, image, title }) {
-    const  previewButton = document.createElement('button');
+function createBookPreviewButton({ author, id, image, title }) {
+    const previewButton = document.createElement('button');
     previewButton.classList.add('preview');
-    previewButton.dataset.id = id;
+    previewButton.dataset.preview = id;
     previewButton.innerHTML = `
-    <img class="preview__image" src="${image}" />
-    <div class="preview__info">
-        <h3 class="preview__title">${title}</h3>
-        <div class="preview__author">${authors[author]}</div>
-    </div>`;
+        <img class="preview__image" src="${image}" />
+        <div class="preview__info">
+            <h3 class="preview__title">${title}</h3>
+            <div class="preview__author">${authors[author]}</div>
+        </div>
+    `;
     return previewButton;
 }
 
 /**
- * initiate a dropdown menu with availabe options
- * @parameters {string} dropdownDataAtrribute - the data attribute
- * @parameters  {object} options - the options to display in the dropdown
- * @parameters {string}  defaultText - the default text to display
+ * Populates a dropdown menu with options.
+ * @param {string} dropdownDataAttribute - The data attribute for the dropdown element.
+ * @param {Object} options - The options to populate the dropdown with.
+ * @param {string} defaultText - The default option text.
  */
-function  initializeDropdown(dropdownDataAtrribute, options, defaultText) {
-    const  dropdown = document.createDocumentFragment();
+function initialiseDropdown(dropdownDataAttribute, options, defaultText) {
+    const dropdown = document.createDocumentFragment();
     const defaultOption = document.createElement('option');
     defaultOption.value = 'any';
     defaultOption.innerText = defaultText;
@@ -66,11 +65,12 @@ function  initializeDropdown(dropdownDataAtrribute, options, defaultText) {
         option.innerText = name;
         dropdown.appendChild(option);
     });
-    document.querySelector(`[${dropdownDataAtrribute}]`).appendChild(dropdown);
+
+    document.querySelector(`[${dropdownDataAttribute}]`).appendChild(dropdown);
 }
 
 /**
- * set theme based on preference
+ * Sets theme based on user preferences.
  */
 function setTheme() {
     const theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
@@ -78,8 +78,8 @@ function setTheme() {
 }
 
 /**
- * let us apply the selected theme
- * @parameters   {string} theme - the theme to apply
+ * Applies the selected theme to the document.
+ * @param {string} theme - The selected theme ('day' or 'night').
  */
 function applyTheme(theme) {
     document.querySelector('[data-settings-theme]').value = theme;
@@ -90,22 +90,23 @@ function applyTheme(theme) {
 }
 
 /**
- * update the show more button
+ * Updates the "Show more" button's state and text.
  */
 function updateShowMoreButton() {
-    const showMoreButton = document.querySelector('[data-list-button]');
-    showMoreButton.disabled = filteredBooks.length  <= currentPage * BOOKS_PER_PAGE;
-    showMoreButton.innerHTML= `
-    <span>Show more</span>
+    const button = document.querySelector('[data-list-button]');
+    button.disabled = filteredBooks.length <= currentPage * BOOKS_PER_PAGE;
+    button.innerHTML = `
+        <span>Show more</span>
         <span class="list__remaining"> (${Math.max(0, filteredBooks.length - currentPage * BOOKS_PER_PAGE)})</span>
-        `;
+    `;
 }
+
 /**
  * Handles form submission for the search filters.
  * Filters books and updates the display based on selected criteria.
- * @parameters {Event} event - The form submit event.
+ * @param {Event} event - The form submit event.
  */
-function handleSearchForBook(event) {
+function handleSearchForBooks(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const filters = Object.fromEntries(formData);
@@ -121,35 +122,35 @@ function handleSearchForBook(event) {
 }
 
 /**
- * filter books based on search
- * @parameters {object} book - the book to filter
- * @parameters  {object} filters - the search filters
- * @parameters {boolean} - true is book matches  the filter, false otherwise
+ * Filters a book based on the selected criteria.
+ * @param {Object} book - The book to filter.
+ * @param {Object} filters - The filter criteria.
+ * @returns {boolean} - True if the book matches the filters; otherwise false.
  */
-function  filterBook(book, filters) {
-    const titleMatch = filters.title.trim() === '' ||  book.title.toLowerCase().includes(filters.title.trim().toLowerCase());
-    const authorMatch = filters.author.trim() === '' || book.author === filters.author;
-    const genreMatch = filters.genre === 'any'  || book.genre.includes(filters.genre);
+function filterBook(book, filters) {
+    const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
+    const authorMatch = filters.author === 'any' || book.author === filters.author;
+    const genreMatch = filters.genre === 'any' || book.genres.includes(filters.genre);
 
-    return  titleMatch && authorMatch && genreMatch;
+    return titleMatch && authorMatch && genreMatch;
 }
 
 /**
- * load additional books
+ * Loads additional books on "Show more" button click.
  */
 function loadMoreBooks() {
-    const start = currentPage  * BOOKS_PER_PAGE;
+    const start = currentPage * BOOKS_PER_PAGE;
     const end = start + BOOKS_PER_PAGE;
     displayBookPreviews(filteredBooks.slice(start, end));
     currentPage++;
     updateShowMoreButton();
-
 }
+
 /**
  * Initializes event listeners for various UI elements.
  */
 function initializeEventListeners() {
-    document.querySelector('[data-search-form]').addEventListener('submit', handleSearchForBook);
+    document.querySelector('[data-search-form]').addEventListener('submit', handleSearchForBooks);
     document.querySelector('[data-list-button]').addEventListener('click', loadMoreBooks);
     document.querySelector('[data-settings-form]').addEventListener('submit', event => {
         event.preventDefault();
@@ -181,46 +182,7 @@ function initializeEventListeners() {
 
     document.querySelector('[data-list-items]').addEventListener('click', displayBookDetails);
 }
-/**
- * dsiplay details of a selected book.
- * @parameters {event} event- the click event
- */
-/**
- * Initializes event listeners for various UI elements.
- */
-function initializeEventListeners() {
-    document.querySelector('[data-search-form]').addEventListener('submit', handleSearch);
-    document.querySelector('[data-list-button]').addEventListener('click', loadMoreBooks);
-    document.querySelector('[data-settings-form]').addEventListener('submit', event => {
-        event.preventDefault();
-        const theme = new FormData(event.target).get('theme');
-        applyTheme(theme);
-        document.querySelector('[data-settings-overlay]').open = false;
-    });
 
-    document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-        document.querySelector('[data-search-overlay]').open = false;
-    });
-
-    document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-        document.querySelector('[data-settings-overlay]').open = false;
-    });
-
-    document.querySelector('[data-header-search]').addEventListener('click', () => {
-        document.querySelector('[data-search-overlay]').open = true;
-        document.querySelector('[data-search-title]').focus();
-    });
-
-    document.querySelector('[data-header-settings]').addEventListener('click', () => {
-        document.querySelector('[data-settings-overlay]').open = true;
-    });
-
-    document.querySelector('[data-list-close]').addEventListener('click', () => {
-        document.querySelector('[data-list-active]').open = false;
-    });
-
-    document.querySelector('[data-list-items]').addEventListener('click', displayBookDetails);
-}
 /**
  * Displays details of a selected book.
  * @param {Event} event - The click event.
@@ -239,5 +201,5 @@ function displayBookDetails(event) {
 }
 
 // Initialize the UI and event listeners on page load
-InitializeUserInterface();
+initializeUserInterface();
 initializeEventListeners();
