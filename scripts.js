@@ -132,9 +132,15 @@ function  filterBook(book, filters) {
     const authorMatch = filters.author.trim() === '' || book.author === filters.author;
     const genreMatch = filters.genre === 'any'  || book.genre.includes(filters.genre);
 
-
+    return  titleMatch && authorMatch && genreMatch;
 }
 
+/**
+ * load additional books
+ */
+function loadMoreBooks() {
+    const 
+}
 
 
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
