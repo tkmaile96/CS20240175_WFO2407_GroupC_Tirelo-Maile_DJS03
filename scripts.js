@@ -70,6 +70,13 @@ function  initializeDropdown(dropdownDataAtrribute, options, defaultText) {
     document.querySelector(`[${dropdownDataAtrribute}]`).appendChild(dropdown);
 }
 
+/**
+ * set theme based on preference
+ */
+function setTheme() {
+    const theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+    applyTheme(theme);
+}
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
 
