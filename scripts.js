@@ -1,7 +1,20 @@
+// import important data
 import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 
-let page = 1;
-let matches = books
+let currentPage = 1;
+let filteredBooks = books
+
+/**
+ * Initialize the book preview, genre and author
+ */
+function InitializeUserInterface() {
+    displayBookPreviews(filteredBooks.slice(0, BOOKS_PER_PAGE));
+    initializeDropdown('data-search-genres', genres, 'All Genres');
+    initializeDropdown('data-search-authors',  authors, 'All Authors');
+    setTheme();
+    updateShowMoreButton();
+
+}
 
 const starting = document.createDocumentFragment()
 
