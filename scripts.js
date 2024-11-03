@@ -16,6 +16,20 @@ function InitializeUserInterface() {
 
 }
 
+/**
+ * Let us create  a function to display the book previews
+ * @parameters {Array} booksToShow - List of all the books to display
+
+ */
+function displayBookPreviews(booksToShow) {
+    const fragment = document.createDocumentFragment();
+    booksToShow.forEach(({ author, id , image , title }) => {
+        const previewButton = createBookPreviewButton({ author, id, image, title});
+        fragment.appendChild(previewButton);
+    })
+    document.querySelector('[data-list-items]').appendChild(fragment)
+}
+
 const starting = document.createDocumentFragment()
 
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
