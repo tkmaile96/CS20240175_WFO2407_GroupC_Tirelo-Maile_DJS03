@@ -30,6 +30,25 @@ function displayBookPreviews(booksToShow) {
     document.querySelector('[data-list-items]').appendChild(fragment)
 }
 
+/**
+ * let us create a button  for each book preview
+ * @parameters  {Object} book - Object containing the book details
+ * @return  {HTMLElement} - The button created for the book preview
+ */
+function createBookPreviewButton({ author,  id, image, title }) {
+    const  previewButton = document.createElement('button');
+    previewButton.classList.add('preview');
+    previewButton.dataset.id = id;
+    previewButton.innerHTML = `
+    <img class="preview__image" src="${image}" />
+    <div class="preview__info">
+        <h3 class="preview__title">${title}</h3>
+        <div class="preview__author">${authors[author]}</div>
+    </div>`;
+    return previewButton;
+}
+
+
 const starting = document.createDocumentFragment()
 
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
