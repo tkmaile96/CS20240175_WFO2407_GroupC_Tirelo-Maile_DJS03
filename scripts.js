@@ -13,7 +13,6 @@ function InitializeUserInterface() {
     initializeDropdown('data-search-authors',  authors, 'All Authors');
     setTheme();
     updateShowMoreButton();
-
 }
 
 /**
@@ -182,4 +181,63 @@ function initializeEventListeners() {
 
     document.querySelector('[data-list-items]').addEventListener('click', displayBookDetails);
 }
+/**
+ * dsiplay details of a selected book.
+ * @parameters {event} event- the click event
+ */
+/**
+ * Initializes event listeners for various UI elements.
+ */
+function initializeEventListeners() {
+    document.querySelector('[data-search-form]').addEventListener('submit', handleSearch);
+    document.querySelector('[data-list-button]').addEventListener('click', loadMoreBooks);
+    document.querySelector('[data-settings-form]').addEventListener('submit', event => {
+        event.preventDefault();
+        const theme = new FormData(event.target).get('theme');
+        applyTheme(theme);
+        document.querySelector('[data-settings-overlay]').open = false;
+    });
 
+    document.querySelector('[data-search-cancel]').addEventListener('click', () => {
+        document.querySelector('[data-search-overlay]').open = false;
+    });
+
+    document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
+        document.querySelector('[data-settings-overlay]').open = false;
+    });
+
+    document.querySelector('[data-header-search]').addEventListener('click', () => {
+        document.querySelector('[data-search-overlay]').open = true;
+        document.querySelector('[data-search-title]').focus();
+    });
+
+    document.querySelector('[data-header-settings]').addEventListener('click', () => {
+        document.querySelector('[data-settings-overlay]').open = true;
+    });
+
+    document.querySelector('[data-list-close]').addEventListener('click', () => {
+        document.querySelector('[data-list-active]').open = false;
+    });
+
+    document.querySelector('[data-list-items]').addEventListener('click', displayBookDetails);
+}
+/**
+ * Displays details of a selected book.
+ * @param {Event} event - The click event.
+ */
+function displayBookDetails(event) {
+    const previewId = event.target.closest('[data-preview]')?.dataset.preview;
+    const selectedBook = books.find(book => book.id === previewId);
+    if (selectedBook) {
+        document.querySelector('[data-list-active]').open = true;
+        document.querySelector('[data-list-blur]').src = selectedBook.image;
+        document.querySelector('[data-list-image]').src = selectedBook.image;
+        document.querySelector('[data-list-title]').innerText = selectedBook.title;
+        document.querySelector('[data-list-subtitle]').innerText = `${authors[selectedBook.author]} (${new Date(selectedBook.published).getFullYear()})`;
+        document.querySelector('[data-list-description]').innerText = selectedBook.description;
+    }
+}
+
+// Initialize the UI and event listeners on page load
+InitializeUserInterface();
+initializeEventListeners();
