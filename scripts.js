@@ -90,13 +90,19 @@ function applyTheme(theme) {
     document.documentElement.style.setProperty('--color-light', lightColor);
 }
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
-
-document.querySelector('[data-list-button]').innerHTML = `
+/**
+ * update the show more button
+ */
+function updateShowMoreButton() {
+    const showMoreButton = document.querySelector('[data-list-button]');
+    showMoreButton.disabled = filteredBooks.length  <= currentPage * BOOKS_PER_PAGE;
+    showMoreButton.innerHTML= `
     <span>Show more</span>
-    <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-`
+        <span class="list__remaining"> (${Math.max(0, filteredBooks.length - currentPage * BOOKS_PER_PAGE)})</span>
+        `
+
+
+}
 
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
